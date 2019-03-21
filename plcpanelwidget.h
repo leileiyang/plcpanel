@@ -6,7 +6,6 @@
 
 #include "plcclient/plcclient.h"
 #include "dev/gas.h"
-#include "sampler/samplecontroller.h"
 
 #include "plcmsg/plc_nml.h"
 
@@ -40,10 +39,8 @@ private:
 
   Gas *gas_;
   PlcClient plc_client_;
-  SampleController sample_ctrller_;
 
   QTimer update_timer_;
-  PLC_STAT plc_status_;
   QTime t;
 };
 

@@ -7,11 +7,10 @@
 
 PlcPanelWidget::PlcPanelWidget(QWidget *parent) :
   QWidget(parent),
-  ui(new Ui::PlcPanelWidget), gas_(NULL), sample_ctrller_(plc_client_)
-{
+  ui(new Ui::PlcPanelWidget), gas_(NULL) {
+
   ui->setupUi(this);
   connect(&update_timer_, SIGNAL(timeout()), this, SLOT(updateStatus()));
-  update_timer_.start(100);
   t.start();
 }
 
@@ -27,8 +26,9 @@ PlcPanelWidget::~PlcPanelWidget()
 int PlcPanelWidget::Initialzie() {
   if (plc_client_.Startup("plctask.nml")) {
     gas_ = new NmlGas(plc_client_);
-    sample_ctrller_.Initialize();
+    update_timer_.start(100);
   } else {
+    setEnabled(false);
     return -1;
   }
   return 0;
@@ -46,10 +46,10 @@ void PlcPanelWidget::onBlow(bool checked)
 }
 
 void PlcPanelWidget::updateStatus() {
-  qDebug("Time elapsed in updateStatue: %d ms", t.elapsed());
-  t.restart();
-  sample_ctrller_.ReadPlcStatus(plc_status_);
-  ui->blow_btn_->onSwitch(CheckStatusBit(plc_status_.gas_stat_.current_gas_,
-                                         plc_status_.gas_stat_.gas_status_));
+  //qDebug("Time elapsed in updateStatue: %d ms", t.elapsed());
+  //t.restart();
+  ui->blow_btn_->onSwitch(\
+      CheckStatusBit(plc_client_.plc_status_->gas_stat_.current_gas_,
+                     plc_client_.plc_status_->gas_stat_.gas_status_));
 
 }

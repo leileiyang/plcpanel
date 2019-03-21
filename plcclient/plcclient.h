@@ -40,6 +40,7 @@ class PlcClient {
   int UpdateError();
 
   friend class SampleController;
+  friend class PlcPanelWidget;
 
  private:
   // communication channel
