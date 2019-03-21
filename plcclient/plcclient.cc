@@ -2,17 +2,14 @@
 
 #include <stdio.h>
 
-#include <nml_oi.hh>
-#include <iostream>
-
 PlcClient::PlcClient():
-    plc_status_(NULL),
     connected_(false),
     plc_cmd_buffer_(NULL),
     plc_stat_buffer_(NULL),
     plc_err_buffer_(NULL),
     plc_timeout_(3.0),
-    cmd_serial_number_(0) {
+    cmd_serial_number_(0),
+    plc_status_(NULL) {
 
   memset(error_string_, 0, NML_ERROR_LEN);
 }
@@ -159,6 +156,9 @@ int PlcClient::UpdateError() {
 #define PLC_COMMAND_DELAY 0.01
 
 int PlcClient::CommandWaitReceived(int serial_number) {
+  if (!connected_) {
+    return -1;
+  }
   double end = 0.0;
   while (plc_timeout_ <= 0 || end < plc_timeout_) {
     UpdateStatus();
@@ -168,12 +168,16 @@ int PlcClient::CommandWaitReceived(int serial_number) {
     esleep(PLC_COMMAND_DELAY);
     end += PLC_COMMAND_DELAY;
   }
+  connected_ = false;
   return -1;
 }
 
 int PlcClient::CommandWaitDone(int serial_number) {
   double end = 0.0;
   if (0 != CommandWaitReceived(serial_number)) {
+    return -1;
+  }
+  if (!connected_) {
     return -1;
   }
   while (plc_timeout_ <= 0.0 || end < plc_timeout_) {
@@ -187,6 +191,7 @@ int PlcClient::CommandWaitDone(int serial_number) {
     esleep(PLC_COMMAND_DELAY);
     end += PLC_COMMAND_DELAY;
   }
+  connected_ = false;
   return -1;
 }
 

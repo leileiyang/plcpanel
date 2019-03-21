@@ -1,15 +1,13 @@
 #ifndef PLCCLIENT_H_
 #define PLCCLIENT_H_
 
-#include <string.h>
-#include <stdint.h>
 #include <string>
-#include <timer.hh>
-#include <cmd_msg.hh>
-#include <stat_msg.hh>
-#include <nml_oi.hh>
 
 #include "plcmsg/plc_nml.h"
+
+#ifdef toLine
+#undef toLine
+#endif
 
 enum PLC_WAIT_TYPE {
   PLC_WAIT_NONE,
@@ -24,7 +22,6 @@ class PlcClient {
 
   int Startup(std::string plc_nmlfile);
   void Shutdown();
-  PLC_STAT *plc_status_;
   bool connected_;
 
   int WriteCmdMsg(RCS_CMD_MSG *msg, int wait_done = PLC_WAIT_RECEIVED);
@@ -39,6 +36,11 @@ class PlcClient {
     return plc_timeout_;
   }
 
+  int UpdateStatus();
+  int UpdateError();
+
+  friend class SampleController;
+
  private:
   // communication channel
   RCS_CMD_CHANNEL *plc_cmd_buffer_;
@@ -49,8 +51,8 @@ class PlcClient {
   double plc_timeout_;
   int cmd_serial_number_;
 
-  int UpdateStatus();
-  int UpdateError();
+  PLC_STAT *plc_status_;
+
   int CommandWaitReceived(int serial_number);
   int CommandWaitDone(int serial_number);
 

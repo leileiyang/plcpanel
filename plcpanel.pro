@@ -16,13 +16,17 @@ SOURCES += main.cpp\
         plcpanelwidget.cpp \
     statebutton.cpp \
     plcclient/plcclient.cc \
-    dev/nmlgas.cpp
+    dev/nmlgas.cpp \
+    sampler/sampler.cpp \
+    sampler/samplecontroller.cpp
 
 HEADERS  += plcpanelwidget.h \
     statebutton.h \
     plcclient/plcclient.h \
     dev/gas.h \
-    dev/nmlgas.h
+    dev/nmlgas.h \
+    sampler/sampler.h \
+    sampler/samplecontroller.h
 
 FORMS    += plcpanelwidget.ui
 

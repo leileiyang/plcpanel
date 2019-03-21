@@ -1,11 +1,28 @@
-# Buffers
-# Name                Type   Host  size   neut?  (old)   buffer#  MP ---
-B plcCommand          SHMEM  localhost    4160    0       *      1        9  1100 TCP=5007  xdr
-B plcStatus           SHMEM  localhost    4160    0       *      2        9  1101 TCP=5007  xdr
-B plcError            SHMEM  localhost    4224    0       *      3        9  1102 TCP=5007  xdr  queue
+# plctask.nml
+# INPUT_FILENAME=plctask.cfg
 
-# Processes
-# Name  Buffer       Type      Host        Ops  server?  timeout   master?  tcnum
-P plcClient  plcCommand       LOCAL    localhost  W  0    3.0     0   2
-P plcClient   plcStatus       LOCAL    localhost  R  0    3.0     0   2
-P plcClient    plcError       LOCAL    localhost  R  0    3.0     0   2
+# Buffers:
+#       name 	   type  	      host 	size 	neut 	0 	buf# 	max_proc 	. . .
+B plcCommand 	SHMEM    	 10.1.0.165 	4160 	0 	* 	1 	9 	1100 	TCP=5007  xdr
+ 
+B  plcStatus 	SHMEM    	 10.1.0.165 	4160 	0 	* 	2 	9 	1101 	TCP=5007  xdr
+ 
+B   plcError 	SHMEM    	 10.1.0.165 	4224 	0 	* 	3 	9 	1102 	TCP=5007  xdr  queue
+ 
+
+# Processes: 
+#       Name 	    Buffer 	      type 	      host 	       ops 	server 	timeout 	master 	c_num  	 . . .
+P     plcsvr 	plcCommand 	     LOCAL 	 localhost 	        RW 	1 	1.000000 	1 	0 	
+P     plcsvr 	 plcStatus 	     LOCAL 	 localhost 	        RW 	1 	1.000000 	1 	0 	
+P     plcsvr 	  plcError 	     LOCAL 	 localhost 	        RW 	1 	1.000000 	1 	0 	
+ 
+P        plc 	plcCommand 	     LOCAL 	 localhost 	         R 	0 	1.000000 	0 	1 	
+P        plc 	 plcStatus 	     LOCAL 	 localhost 	         W 	0 	1.000000 	0 	1 	
+P        plc 	  plcError 	     LOCAL 	 localhost 	         W 	0 	1.000000 	0 	1 	
+ 
+P  plcClient 	plcCommand 	    REMOTE 	 localhost 	         W 	0 	3.000000 	0 	2 	
+P  plcClient 	 plcStatus 	    REMOTE 	 localhost 	         R 	0 	3.000000 	0 	2 	
+P  plcClient 	  plcError 	    REMOTE 	 localhost 	         R 	0 	3.000000 	0 	2
+ 
+P    default 	   default 	      AUTO 	 localhost 	        RW 	0 	INF     	0 	0 	
+

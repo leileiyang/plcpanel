@@ -2,9 +2,20 @@
 #define PLCPANELWIDGET_H
 
 #include <QWidget>
+#include <QTimer>
 
 #include "plcclient/plcclient.h"
 #include "dev/gas.h"
+#include "sampler/samplecontroller.h"
+
+#include "plcmsg/plc_nml.h"
+
+#include <QTime>
+
+template <typename T>
+int CheckStatusBit(int pos, const T &status) {
+  return (status >> pos) & 1U;
+}
 
 namespace Ui {
 class PlcPanelWidget;
@@ -22,12 +33,18 @@ public:
 
 private slots:
   void onBlow(bool checked);
+  void updateStatus();
 
 private:
   Ui::PlcPanelWidget *ui;
 
   Gas *gas_;
   PlcClient plc_client_;
+  SampleController sample_ctrller_;
+
+  QTimer update_timer_;
+  PLC_STAT plc_status_;
+  QTime t;
 };
 
 #endif // PLCPANELWIDGET_H

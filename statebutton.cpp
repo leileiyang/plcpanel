@@ -2,7 +2,7 @@
 
 StateButton::StateButton(QWidget *parent) : QPushButton(parent), on_(false)
 {
-  connect(this, SIGNAL(clicked(bool)), this, SLOT(onSwitch(bool)));
+  //connect(this, SIGNAL(clicked(bool)), this, SLOT(onSwitch(bool)));
 }
 
 void StateButton::paintEvent(QPaintEvent *event) {
